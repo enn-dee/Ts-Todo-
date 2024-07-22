@@ -1,5 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
+import { timeStamp } from "console";
 
 interface IUser extends Document {
   username: string;
@@ -7,10 +8,13 @@ interface IUser extends Document {
   comparePassword: (password: string) => Promise<boolean>;
 }
 
-const UserSchema: Schema = new Schema({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-});
+const UserSchema: Schema = new Schema(
+  {
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+  },
+  { timestamps: true}
+);
 
 UserSchema.pre<IUser>("save", async function (next) {
   if (!this.isModified("password")) return next();
